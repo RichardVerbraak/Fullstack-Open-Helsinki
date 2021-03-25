@@ -1,0 +1,46 @@
+//// Diagram for visiting https://studies.cs.helsinki.fi/exampleapp/notes 
+
+1. Browser sends a GET request to the above URL
+
+2. Server receives request and sends back the HTML page
+
+3. Browser will render HTML page accordingly
+3.1. Browser encounters the link tag (css) and sends a GET request to exampleapp/main.css -- server sends back the css file
+3.2. Browser encounters the script tag (js) and sends a GET request to exampleapp/main.js -- server sends back the js file
+
+4. The script gets executed by the browser, the js file is sending out a GET request to /exampleapp/data.json for the notes -- server sends back json note data
+5. The notes then get appended via the DOM API to the HTML page and then finishes rendering the page
+
+//// Creating a new note on https://studies.cs.helsinki.fi/exampleapp/notes
+
+1. The form submit action is a POST request to https://studies.cs.helsinki.fi/exampleapp/new_note
+1.1 new_note pushes the note onto the notes array 
+
+2. The server response is a 302 redirect to /exampleapp/notes
+
+3. Because of the redirect the browser now goes through the whole above cycle again (GET request) when visiting /exampleapp/notes URL-
+   and thus has access to the new notes
+
+
+//// Diagram for visiting https://studies.cs.helsinki.fi/exampleapp/spa && creating a new note
+
+1. Browser sends a GET request to the above URL
+
+2. Server response to said request is the HTML page
+
+3. Browser will render HTML page accordingly
+3.1. Browser encounters the link tag (css) and sends a GET request to exampleapp/main.css -- server sends back the css file
+3.2. Browser encounters the script tag (js) and sends a GET request to exampleapp/spa.js -- server sends back the js file
+
+4. Again the script gets executed by the browser
+4.1. AJAX GET request is made to the data.json file --> the returning server response (notes data) is then saved to the notes array --
+     after which redrawNotes run to append said notes in an li tag to the unordered list
+4.2. window.onload runs at the end of the document loading process --> causing redrawNotes to be run again --> end of loading document
+
+//// Creating a new note on https://studies.cs.helsinki.fi/exampleapp/spa
+
+1. Creating a note in the input field of the form and clicking save 
+2. window.onload triggers and will prevent the default refresh of the page
+2.1. Gets note data from input field --> push to array --> set the field to an empty string --> redrawNotes runs again to update the DOM 
+2.2. POST request gets made (sendToServer func) to new_note_spa, sets the header to JSON format and set the note in JSON format as well
+
