@@ -9,8 +9,6 @@ const App = () => {
 
 	const [all, setAll] = useState(0)
 
-	const [average, setAverage] = useState(0)
-
 	return (
 		<div>
 			<div>
