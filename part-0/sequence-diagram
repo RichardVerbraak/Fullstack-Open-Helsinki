@@ -43,4 +43,3 @@
 2. window.onload triggers and will prevent the default refresh of the page
 2.1. Gets note data from input field --> push to array --> set the field to an empty string --> redrawNotes runs again to update the DOM 
 2.2. POST request gets made (sendToServer func) to new_note_spa, sets the header to JSON format and set the note in JSON format as well
-
