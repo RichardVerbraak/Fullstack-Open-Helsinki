@@ -1,17 +1,28 @@
 import React, { useState } from 'react'
+import Form from './components/Form'
+import Persons from './components/Persons'
+import Search from './components/Search'
 
 const App = () => {
 	const [persons, setPersons] = useState([
-		{ name: 'Arto Hellas', number: '040-1234567' },
+		{ name: 'Arto Hellas', number: '040-123456' },
+		{ name: 'Ada Lovelace', number: '39-44-5323523' },
+		{ name: 'Dan Abramov', number: '12-43-234345' },
+		{ name: 'Mary Poppendieck', number: '39-23-6423122' },
 	])
+
+	const [filter, setFilter] = useState('')
+
 	const [newName, setNewName] = useState('')
 	const [newNumber, setNewNumber] = useState('')
+
+	const filterPersons = (e) => {
+		setFilter(e.target.value)
+	}
 
 	const addName = (e) => {
 		setNewName(e.target.value)
 	}
-
-	console.log(newName)
 
 	const addPerson = (e) => {
 		e.preventDefault()
@@ -36,25 +47,19 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
-			<form onSubmit={addPerson}>
-				<div>
-					name: <input value={newName} onChange={addName} />
-				</div>
-				<div>
-					number: <input value={newNumber} onChange={addNumber} />
-				</div>
-				<div>
-					<button type='submit'>add</button>
-				</div>
-			</form>
+			<Search filter={filter} filterPersons={filterPersons} />
+
+			<h2>add a new</h2>
+			<Form
+				addPerson={addPerson}
+				addName={addName}
+				addNumber={addNumber}
+				newName={newName}
+				newNumber={newNumber}
+			/>
+
 			<h2>Numbers</h2>
-			{persons.map((person, i) => {
-				return (
-					<p key={person.name}>
-						{person.name} <span>{person.number}</span>
-					</p>
-				)
-			})}
+			<Persons persons={persons} filter={filter} />
 		</div>
 	)
 }
