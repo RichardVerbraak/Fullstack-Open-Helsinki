@@ -11,7 +11,7 @@ const App = () => {
 
 	const [warning, setWarning] = useState('')
 
-	const [details, setDetails] = useState([])
+	const [details, setDetails] = useState({})
 
 	const searchCountries = (e) => {
 		setSearch(e.target.value)
@@ -24,7 +24,9 @@ const App = () => {
 
 			setCountries(data)
 		})
+	}, [])
 
+	useEffect(() => {
 		// Filter data based on search
 		if (search) {
 			const filteredCountries = countries.filter((country) => {
@@ -37,14 +39,24 @@ const App = () => {
 
 			if (filteredCountries.length > 0 && filteredCountries.length <= 10) {
 				setFiltered(filteredCountries)
+				setWarning('')
+			}
+
+			// Pass the object to CountryDetails and reset the filtered array so it only shows the details
+			if (filteredCountries.length === 1) {
+				setDetails(filteredCountries[0])
+				setFiltered([])
+				setWarning('')
 			}
 		}
 
-		// Resets array when input field is empty
+		// Resets the filtered array, country details and the warning when input field is empty
 		if (!search) {
 			setFiltered([])
+			setDetails({})
+			setWarning('')
 		}
-	}, [search])
+	}, [search, countries])
 
 	return (
 		<div>
@@ -52,9 +64,11 @@ const App = () => {
 			<input value={search} type='text' onChange={searchCountries} />
 			{warning && <Warning warning={warning} />}
 
-			<Countries countries={filtered} details={details} />
+			<Countries countries={filtered} setDetails={setDetails} />
 
-			<CountryDetails details={details} />
+			{Object.keys(details).length !== 0 && (
+				<CountryDetails details={details} />
+			)}
 		</div>
 	)
 }

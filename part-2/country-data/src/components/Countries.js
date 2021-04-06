@@ -1,11 +1,22 @@
 import React from 'react'
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, setDetails }) => {
 	return (
 		<div>
 			{countries &&
 				countries.map((country) => {
-					return <p key={country.numericCode}>{country.name}</p>
+					return (
+						<div key={country.name}>
+							<span>{country.name}</span>
+							<button
+								onClick={() => {
+									setDetails(country)
+								}}
+							>
+								show
+							</button>
+						</div>
+					)
 				})}
 		</div>
 	)
