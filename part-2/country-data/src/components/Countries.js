@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Countries = ({ countries, setDetails }) => {
+const Countries = ({ countries, setCountryDetails }) => {
 	return (
 		<div>
 			{countries &&
@@ -10,7 +10,7 @@ const Countries = ({ countries, setDetails }) => {
 							<span>{country.name}</span>
 							<button
 								onClick={() => {
-									setDetails(country)
+									setCountryDetails(country)
 								}}
 							>
 								show

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import Warning from './components/Warning'
+
 import Countries from './components/Countries'
 import CountryDetails from './components/CountryDetails'
+import Weather from './components/Weather'
 
 const App = () => {
 	const [countries, setCountries] = useState([])
-	const [filtered, setFiltered] = useState('')
 	const [search, setSearch] = useState('')
 
-	const [warning, setWarning] = useState('')
+	const [filtered, setFiltered] = useState([])
+	const [countryDetails, setCountryDetails] = useState()
+	const [weather, setWeather] = useState()
 
-	const [details, setDetails] = useState({})
+	const [warning, setWarning] = useState('')
 
 	const searchCountries = (e) => {
 		setSearch(e.target.value)
@@ -27,48 +29,66 @@ const App = () => {
 	}, [])
 
 	useEffect(() => {
-		// Filter data based on search
 		if (search) {
-			const filteredCountries = countries.filter((country) => {
+			const filtered = countries.filter((country) => {
 				return country.name.toLowerCase().includes(search.toLowerCase())
 			})
 
-			if (filteredCountries.length > 10) {
+			// Reset filtered array whenever there are too many results
+			if (filtered.length > 10) {
+				setFiltered([])
 				setWarning('Too many results, please narrow down search')
 			}
 
-			if (filteredCountries.length > 0 && filteredCountries.length <= 10) {
-				setFiltered(filteredCountries)
+			if (filtered.length > 1 && filtered.length <= 10) {
+				setFiltered(filtered)
 				setWarning('')
 			}
 
-			// Pass the object to CountryDetails and reset the filtered array so it only shows the details
-			if (filteredCountries.length === 1) {
-				setDetails(filteredCountries[0])
+			// Set the details to the first and only item of the filtered array --> Don't show filtered array && warning anymore
+			// Else always set the details state to empty
+			if (filtered.length === 1) {
+				setCountryDetails(filtered[0])
 				setFiltered([])
 				setWarning('')
+			} else {
+				setCountryDetails()
+				setWeather()
 			}
 		}
 
-		// Resets the filtered array, country details and the warning when input field is empty
+		// Remove warning when no search input
 		if (!search) {
-			setFiltered([])
-			setDetails({})
 			setWarning('')
 		}
 	}, [search, countries])
+
+	useEffect(() => {
+		if (countryDetails) {
+			axios
+				.get(
+					`http://api.weatherstack.com/current?access_key=${process.env.REACT_APP_API_KEY}&query=${countryDetails.name}`
+				)
+				.then((response) => {
+					const { data } = response
+					setWeather(data)
+				})
+		}
+	}, [countryDetails])
 
 	return (
 		<div>
 			<span>find countries</span>
 			<input value={search} type='text' onChange={searchCountries} />
-			{warning && <Warning warning={warning} />}
+			{warning && <p>{warning}</p>}
 
-			<Countries countries={filtered} setDetails={setDetails} />
-
-			{Object.keys(details).length !== 0 && (
-				<CountryDetails details={details} />
+			{filtered && (
+				<Countries countries={filtered} setCountryDetails={setCountryDetails} />
 			)}
+
+			{countryDetails && <CountryDetails country={countryDetails} />}
+
+			{weather && <Weather weather={weather} />}
 		</div>
 	)
 }

@@ -1,33 +1,27 @@
 import React from 'react'
 
-const CountryDetails = ({ details }) => {
+const CountryDetails = ({ country }) => {
 	return (
 		<div>
-			{details && (
+			<div>
 				<div>
+					<h1>{country.name}</h1>
 					<div>
-						<h1>{details.name}</h1>
-						<div>
-							<p>capital {details.capital}</p>
-							<p>population {details.population}</p>
-						</div>
-						<div>
-							<h2>languages</h2>
-							<ul>
-								{details.languages &&
-									details.languages.map((language) => {
-										return <li key={language.iso639_1}>{language.name}</li>
-									})}
-							</ul>
-						</div>
-						<img
-							width={125}
-							src={details.flag}
-							alt={`Flag of ${details.name}`}
-						/>
+						<p>capital {country.capital}</p>
+						<p>population {country.population}</p>
 					</div>
+					<div>
+						<h2>languages</h2>
+						<ul>
+							{country.languages &&
+								country.languages.map((language) => {
+									return <li key={language.iso639_1}>{language.name}</li>
+								})}
+						</ul>
+					</div>
+					<img width={125} src={country.flag} alt={`Flag of ${country.name}`} />
 				</div>
-			)}
+			</div>
 		</div>
 	)
 }
