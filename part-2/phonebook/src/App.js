@@ -1,15 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Form from './components/Form'
 import Persons from './components/Persons'
 import Search from './components/Search'
 
+import { getAllPersons, savePerson, deletePerson } from './services'
+
 const App = () => {
-	const [persons, setPersons] = useState([
-		{ name: 'Arto Hellas', number: '040-123456' },
-		{ name: 'Ada Lovelace', number: '39-44-5323523' },
-		{ name: 'Dan Abramov', number: '12-43-234345' },
-		{ name: 'Mary Poppendieck', number: '39-23-6423122' },
-	])
+	const [persons, setPersons] = useState([])
 
 	const [filter, setFilter] = useState('')
 
@@ -36,13 +33,32 @@ const App = () => {
 		if (exists && exists.name === newName) {
 			alert(`${newName} already exists in the phonebook`)
 		} else {
-			setPersons([...persons, { name: newName, number: newNumber }])
+			const person = { name: newName, number: newNumber }
+
+			savePerson(person).then((person) => {
+				setPersons([...persons, person])
+			})
 		}
+	}
+
+	const removePerson = (id) => {
+		deletePerson(id).then(() => {
+			const filtered = persons.filter((person) => {
+				return person.id !== id
+			})
+			setPersons(filtered)
+		})
 	}
 
 	const addNumber = (e) => {
 		setNewNumber(e.target.value)
 	}
+
+	useEffect(() => {
+		getAllPersons().then((persons) => {
+			setPersons(persons)
+		})
+	}, [])
 
 	return (
 		<div>
@@ -59,7 +75,7 @@ const App = () => {
 			/>
 
 			<h2>Numbers</h2>
-			<Persons persons={persons} filter={filter} />
+			<Persons persons={persons} filter={filter} removePerson={removePerson} />
 		</div>
 	)
 }
