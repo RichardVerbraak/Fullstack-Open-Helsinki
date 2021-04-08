@@ -21,4 +21,14 @@ const deletePerson = (id) => {
 	})
 }
 
-export { getAllPersons, savePerson, deletePerson }
+const updatePerson = ({ id, name, number }) => {
+	const request = axios.put(`http://localhost:3001/persons/${id}`, {
+		name,
+		number,
+	})
+	return request.then((response) => {
+		return response.data
+	})
+}
+
+export { getAllPersons, savePerson, deletePerson, updatePerson }
