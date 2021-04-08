@@ -17,7 +17,7 @@ const savePerson = (person) => {
 const deletePerson = (id) => {
 	const request = axios.delete(`http://localhost:3001/persons/${id}`)
 	return request.then((response) => {
-		console.log(response)
+		console.log('Deleted')
 	})
 }
 

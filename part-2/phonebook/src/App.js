@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import Form from './components/Form'
+import Message from './components/Message'
 import Persons from './components/Persons'
 import Search from './components/Search'
+
+import './index.css'
 
 import {
 	getAllPersons,
@@ -17,6 +20,8 @@ const App = () => {
 
 	const [newName, setNewName] = useState('')
 	const [newNumber, setNewNumber] = useState('')
+
+	const [message, setMessage] = useState()
 
 	const filterPersons = (e) => {
 		setFilter(e.target.value)
@@ -46,11 +51,26 @@ const App = () => {
 					number: newNumber,
 					id: samePerson.id,
 				}
-				updatePerson(updatedPerson).then((person) => {
-					getAllPersons().then((persons) => {
-						setPersons(persons)
+
+				// Create a new array where the newly updated person (returnedPerson) replaces the old one by matching the IDs
+				updatePerson(updatedPerson)
+					.then((returnedPerson) => {
+						persons.map((person) => {
+							return person.id !== updatedPerson.id ? person : returnedPerson
+						})
 					})
-				})
+					.catch((error) => {
+						setMessage({
+							text: `Information of ${updatedPerson.name} has already been removed from the server`,
+							success: false,
+						})
+
+						// Filter out person who was about to be updated but was already removed
+						const filtered = persons.filter((person) => {
+							return person.id !== updatedPerson.id
+						})
+						setPersons(filtered)
+					})
 			}
 		} else {
 			const person = { name: newName, number: newNumber }
@@ -58,6 +78,14 @@ const App = () => {
 			savePerson(person).then((person) => {
 				setPersons([...persons, person])
 			})
+
+			setMessage({
+				text: `Added ${newName}`,
+				success: true,
+			})
+			setTimeout(() => {
+				setMessage('')
+			}, 5000)
 		}
 	}
 
@@ -83,6 +111,7 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			{message && <Message message={message} />}
 			<Search filter={filter} filterPersons={filterPersons} />
 
 			<h2>add a new</h2>
