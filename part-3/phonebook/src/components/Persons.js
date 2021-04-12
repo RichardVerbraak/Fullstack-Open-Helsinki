@@ -1,6 +1,7 @@
 import React from 'react'
 
 const Persons = ({ persons, filter, removePerson }) => {
+	console.log(persons)
 	return (
 		<div>
 			{persons

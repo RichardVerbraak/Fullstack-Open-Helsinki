@@ -41,11 +41,11 @@ const App = () => {
 
 		// If the person was found ? Alert : add to array
 		if (exists) {
-			const confirm = window.confirm(
+			const confirmed = window.confirm(
 				`${exists.name} already exists in the phonebook, replace the old number with a new one?`
 			)
 
-			if (confirm) {
+			if (confirmed) {
 				// Updated Person Object
 				const updatedPerson = {
 					name: exists.name,
@@ -53,7 +53,7 @@ const App = () => {
 					id: exists.id,
 				}
 
-				// Create a new array where the newly updated person (returnedPerson) replaces the old one by matching the IDs
+				// Create a new array where the newly updated person (data) replaces the old one by matching the IDs
 				updatePerson(updatedPerson)
 					.then((data) => {
 						const updatedArray = persons.map((person) => {
@@ -106,6 +106,8 @@ const App = () => {
 			setPersons(persons)
 		})
 	}, [])
+
+	console.log(persons)
 
 	return (
 		<div>
