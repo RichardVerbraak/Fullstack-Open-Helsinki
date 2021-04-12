@@ -20,7 +20,6 @@ const savePerson = (person) => {
 const deletePerson = (id) => {
 	const request = axios.delete(`${baseURL}/${id}`)
 	return request.then((response) => {
-		console.log(response.data)
 		return response.data
 	})
 }
@@ -31,7 +30,6 @@ const updatePerson = ({ id, name, number }) => {
 		number,
 	})
 	return request.then((response) => {
-		console.log(response.data)
 		return response.data
 	})
 }

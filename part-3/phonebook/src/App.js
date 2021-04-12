@@ -107,8 +107,6 @@ const App = () => {
 		})
 	}, [])
 
-	console.log(persons)
-
 	return (
 		<div>
 			<h2>Phonebook</h2>
