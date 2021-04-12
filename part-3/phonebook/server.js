@@ -136,7 +136,7 @@ app.delete('/api/persons/:id', (req, res) => {
 	res.send(filtered)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 
 app.listen(PORT)
 
